@@ -31,7 +31,7 @@ app.use(cors({
 
 }))
 
-
+app.set('trust proxy' , 1)
 
 app.use(session({
    
@@ -42,7 +42,7 @@ app.use(session({
   maxAge: 1000 * 60 * 60 * 24 * 7,
   httpOnly : true,
   secure: process.env.NODE_ENV === 'production',
-  sameSite : 'none',
+  sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   path: '/'
   
   } , 
