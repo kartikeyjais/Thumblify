@@ -29,20 +29,28 @@ app.set('trust proxy' , true);
 app.use(cors({
 
    origin : ['http://localhost:5173', 'http://localhost:3000' , "https://thumblify-osvu.vercel.app"],
-   credentials: true
+   credentials: true,
 
 
 }))
 
 
+app.use(express.json())
 
 
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 app.use(session({
    
    secret: process.env.SESSION_SECRET as string,
   resave: false,
   saveUninitialized: false,
+
+   store: MongoStore.create({
+       mongoUrl : process.env.MONGODB_URL as string,
+       collectionName: 'sessions'   
+        
+  }),
+
   cookie: {
   maxAge: 1000 * 60 * 60 * 24 * 7,
   httpOnly : true,
@@ -50,16 +58,10 @@ app.use(session({
   sameSite : process.env.NODE_ENV === 'production' ? 'none' : 'lax',
   path: '/'
   
-  } , 
-  store: MongoStore.create({
-       mongoUrl : process.env.MONGODB_URL as string,
-       collectionName: 'sessions'   
-        
-  })
-
+  } ,
 }))
 
-app.use(express.json())
+
 
 
 app.get('/', (req: Request, res: Response) => {
