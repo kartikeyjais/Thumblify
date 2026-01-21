@@ -18,10 +18,13 @@ declare module 'express-session'{
      
  }
 
-await connectDB()
+await connectDB();
+
+
 
 const app = express();
 
+app.set('trust proxy' , true);
 
 app.use(cors({
 
@@ -31,8 +34,10 @@ app.use(cors({
 
 }))
 
-app.set('trust proxy' , true)
 
+
+
+// app.use(express.urlencoded({ extended: true }));
 app.use(session({
    
    secret: process.env.SESSION_SECRET as string,
@@ -55,6 +60,7 @@ app.use(session({
 }))
 
 app.use(express.json())
+
 
 app.get('/', (req: Request, res: Response) => {
     res.send('Server is Live!');
